@@ -27,7 +27,7 @@ const Submit = () => {
         }
     }
     else{
-        showErrorToast("Please enter all fields")
+        // showErrorToast("Please enter all fields")
     }
 }
 

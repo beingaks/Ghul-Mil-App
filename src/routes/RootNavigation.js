@@ -18,26 +18,35 @@ const RootNavigation = () => {
   
   const dispatch = useDispatch();
 
-  const data = useSelector(state => state.AuthSlice)
+  const userData = useSelector(state => state.authSlice)
 
   useEffect(() => {
     dispatch(populateUserInfo());
-  })
-
-  console.log("XXX token",data);
-
+  }, [])
+  
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Signup" screenOptions={{
+      <Stack.Navigator initialRouteName= {userData?.token ? "Home" :"Signup"} screenOptions={{
           header: (props) => <CommonHeader {...props} />
       }}>
-        <Stack.Screen name="Home" component={Home} options={{
-          header: props => <HomescreenHeader {...props}/>
-        }}/>
-        <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-        <Stack.Screen name="Signup" component={Signup} options={{headerShown: false}}/>
-        <Stack.Screen name="ChatScreen" component={ChatScreen} options={{title: "Chat"}}/>
-        <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{title: "Notification"}}/>
+        {
+          userData?.token ?
+          <>
+            <Stack.Screen name="Home" component={Home} options={{
+              header: props => <HomescreenHeader {...props}/>
+            }}/>
+            <Stack.Screen name="ChatScreen" component={ChatScreen} options={{title: "Chat"}}/>
+            <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{title: "Notification"}}/>
+          </> :
+          <>
+            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
+            <Stack.Screen name="Signup" component={Signup} options={{headerShown: false}}/>
+          </>
+
+        }
+       
+       
+     
       </Stack.Navigator>
     </NavigationContainer>
   );
