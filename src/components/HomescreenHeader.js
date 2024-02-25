@@ -3,7 +3,7 @@ import Colors from "../assets/Colors"
 import Icon from "react-native-vector-icons/Ionicons"
 
 const HomescreenHeader = ({navigation}) => {
-
+    
     onPressChatIcon = () => {
         navigation.navigate("ChatScreen")
     }
@@ -14,9 +14,9 @@ const HomescreenHeader = ({navigation}) => {
 
     return(
         <View style = {styles.headerContainer}>
-            <View style = {styles.logoContainer}>
+            <TouchableOpacity style = {styles.logoContainer} onPress = {() => navigation?.openDrawer()}>
                 <Text style = {styles.logoText}>Ghul~Mil</Text>
-            </View>
+            </TouchableOpacity>
             <View style = {styles.optionsContainer}>
                 <TouchableOpacity  style = {styles.iconButtonStyle} onPress={onPressNotificationIcon}>
                     <Icon name = "notifications" color="white" size = {22}/>

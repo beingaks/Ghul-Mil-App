@@ -4,8 +4,8 @@ import GlobalStyles from "../../assets/GlobalStyles"
 import Colors from "../../assets/Colors"
 import TypoGraphy from "../../assets/TypoGraphy"
 import { useDispatch } from "react-redux"
-import { loginUser } from "../../store/slices/AuthSlice"
-import { showErrorToast } from "../../utils/helpers";
+import { loginUser, populateUserInfo } from "../../store/slices/AuthSlice"
+import { showErrorToast,showSuccessToast } from "../../utils/helpers";
 
 const Login = ({navigation}) => {
 
@@ -21,12 +21,16 @@ const Submit = () => {
     if(email && password){
         dispatch(loginUser({email, password})).then(({meta}) => {
             if(meta?.requestStatus === "fulfilled"){
-                navigation.navigate("Home")
+                dispatch(populateUserInfo()).then(({meta}) =>{
+                    if(meta?.requestStatus === "fulfilled"){
+                        navigation.navigate("Home")
+                    }
+                })
             }
            })
     }
     else{
-        // showErrorToast("Please enter all fields")
+        showErrorToast("Please enter all fields")
     }
 }
 

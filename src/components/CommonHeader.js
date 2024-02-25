@@ -12,7 +12,7 @@ const CommonHeader = ({ options, navigation }) => {
         <Icon name='return-up-back-sharp' color={Colors.White} size={22}/>
       </TouchableOpacity>
       <View style = {styles.logoContainer}>
-        <Text style = {styles.logoText}>Chat</Text>
+        <Text style = {styles.logoText}>{title}</Text>
       </View>
     </View>
   );

@@ -6,6 +6,7 @@ import TypoGraphy from "../../assets/TypoGraphy"
 import { registerUser } from "../../store/slices/AuthSlice"
 import { useDispatch } from "react-redux"
 import { showErrorToast } from "../../utils/helpers";
+import { populateUserInfo } from "../../store/slices/AuthSlice"
 
 
 const Signup = ({navigation}) => {
@@ -21,13 +22,17 @@ const Submit = () => {
         if(confirmPassword === password){
            dispatch(registerUser({email, password})).then(({meta}) => {
             if(meta?.requestStatus === "fulfilled"){
-                navigation.navigate("Home")
+                dispatch(populateUserInfo()).then(({meta}) =>{
+                    if(meta?.requestStatus === "fulfilled"){
+                        navigation.navigate("Home")
+                    }
+                })
             }
            })
         }
     }
     else{
-        // showErrorToast("Please enter all fields")
+        showErrorToast("Please enter all fields")
     }
 }
 

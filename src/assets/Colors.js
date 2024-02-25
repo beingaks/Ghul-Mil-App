@@ -6,7 +6,8 @@ const Colors = {
     Red: "#cc0c0c",
     Grey: "#58585c",
     Green: "#18cc08",
-    Blue: "#1a37c9"
+    Blue: "#1a37c9",
+    DrawerBg: "#f50fe9"
 }
 
 export default Colors

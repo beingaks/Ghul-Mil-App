@@ -11,7 +11,6 @@ const initialState = {
 export const registerUser = createAsyncThunk( 'user/register', async (data) => {
     try{
         const response = await registerApi(data)
-        console.log("------->", "worked");
         return response.data
     }
     catch(err){
@@ -35,7 +34,7 @@ export const populateUserInfo =createAsyncThunk( 'populate/userInfo',async () =>
         return JSON.parse(data)
     }
     catch (err){
-        console.log(err);
+        throw err
     }
 })
 
@@ -56,7 +55,7 @@ const AuthSlice = createSlice({
             saveData("userData", payload)
         })
         .addCase(registerUser.rejected, (state, payload) => {
-            // showErrorToast(payload?.error?.message)
+            showErrorToast(payload?.error?.message)
         })
 
         builder.addCase(
@@ -67,21 +66,19 @@ const AuthSlice = createSlice({
             saveData("userData", payload)
         })
         .addCase(loginUser.rejected, (state, payload) => {
-            // showErrorToast(payload?.error?.message)
+            showErrorToast(payload?.error?.message)
         })
 
         builder.addCase(populateUserInfo.pending, (state, payload) =>{
 
         })
         .addCase(populateUserInfo.fulfilled, (state, {payload}) => {
-            console.log("SSSSSSSS",payload);
             state.email = payload?.email
             state.id = payload?.id
             state.token = payload?.token
-            console.log("YYEEEEEEEEE",state);
         })
         .addCase(populateUserInfo.rejected, (state, {payload}) => {
-            console.log("Failed");
+            showErrorToast(payload?.error?.message)
         })
     }
 })
