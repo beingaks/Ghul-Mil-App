@@ -4,10 +4,21 @@ import Home from '../screens/Home/Home'
 import HomescreenHeader from '../components/HomescreenHeader'
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 import Colors from '../assets/Colors'
+import { useDispatch, UseDispatch } from 'react-redux'
+import { removeUserInfo } from '../store/slices/AuthSlice'
 
 const DrawerNavigation = ({navigation}) => {
     
     const Drawer = createDrawerNavigator()
+    const dispatch = useDispatch()
+
+    const logout = (navigate) => {
+      dispatch(removeUserInfo()).then(({meta}) => {
+        if(meta?.requestStatus === "fulfilled"){
+          navigate("Login")
+        }
+      })
+    }
 
     const RenderDrawerList = ( props ) => {
       return (
@@ -18,7 +29,7 @@ const DrawerNavigation = ({navigation}) => {
           <TouchableOpacity  style = {styles.drawerButton}>
             <Text style = {styles.drawerButtonText}>Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity  style = {styles.drawerButton}>
+          <TouchableOpacity  style = {styles.drawerButton} onPress={() => logout(props.navigation.navigate)}>
             <Text style = {styles.drawerButtonText}>Log Out</Text>
           </TouchableOpacity>
         </DrawerContentScrollView>
@@ -50,10 +61,13 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 10,
     paddingLeft: 10,
+    borderBottomColor: Colors.White,
+    borderBottomWidth: 1
   },
   drawerButtonText: {
     fontSize: 16,
     fontWeight: "800",
-    color: Colors.Black
+    color: Colors.White,
+    
   }
 })

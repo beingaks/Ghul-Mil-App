@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginApi, registerApi } from "../../services/api";
-import { saveData, getData, showErrorToast } from "../../utils/helpers";
+import { saveData, getData, showErrorToast, removeData } from "../../utils/helpers";
 
 const initialState = {
     id: '',
@@ -32,6 +32,15 @@ export const populateUserInfo =createAsyncThunk( 'populate/userInfo',async () =>
     try{
         const data = await getData("userData")
         return JSON.parse(data)
+    }
+    catch (err){
+        throw err
+    }
+})
+
+export const removeUserInfo = createAsyncThunk('remove/userInfo', async () => {
+    try{
+        await removeData("userData")
     }
     catch (err){
         throw err
@@ -78,6 +87,16 @@ const AuthSlice = createSlice({
             state.token = payload?.token
         })
         .addCase(populateUserInfo.rejected, (state, {payload}) => {
+            showErrorToast(payload?.error?.message)
+        })
+
+        builder.addCase(removeUserInfo.pending, (state, payload) => {
+
+        }).addCase(removeUserInfo.fulfilled, (state, {payload}) => {
+            state.email = ""
+            state.token = ""
+            state.id = ""
+        }).addCase(removeUserInfo.rejected, (state, {payload}) => {
             showErrorToast(payload?.error?.message)
         })
     }

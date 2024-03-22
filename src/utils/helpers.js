@@ -49,3 +49,12 @@ export const getData = async (type) => {
         throw err
     }
 }
+
+export const removeData = async (type) => {
+    try {
+        await AsyncStorage.removeItem(type);
+    }
+    catch (err) {
+        throw err
+    }
+}

@@ -10,6 +10,7 @@ import { populateUserInfo } from '../store/slices/AuthSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import DrawerNavigation from './DrawerNavigation';
 import HomescreenHeader from '../components/HomescreenHeader';
+import AddPost from '../screens/AddPost/AddPost';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,11 @@ const RootNavigation = () => {
               name = "DrawerNavigation"
               component = {DrawerNavigation}
               options={{header: () => null}}
+            />
+             <Stack.Screen
+              name="AddPost"
+              component={AddPost}
+              options={{title: 'Add Post'}}
             />
             <Stack.Screen
               name="ChatScreen"
