@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Linking } from 'react-native'
+import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native'
 import Colors from '../assets/Colors'
 import ModalContainer from './ModalContainer'
 import Icon from "react-native-vector-icons/MaterialIcons"
 import TypoGraphy from '../assets/TypoGraphy'
-import {check, PERMISSIONS, RESULTS, openSettings, request } from "react-native-permissions"
-import { showErrorToast, showInfoToast } from '../utils/helpers'
-import {launchImageLibrary} from "react-native-image-picker"
+import {  showInfoToast } from '../utils/helpers'
+import { launchImageLibrary } from "react-native-image-picker"
 import { useSelector, useDispatch } from 'react-redux'
-import { createNewPost } from '../store/slices/PostsSlice'
+import { createNewPost, getAllPosts } from '../store/slices/PostsSlice'
 
 const AddPostModal = ({isVisible, onBackDropPress}) => {
 
@@ -23,35 +22,7 @@ const AddPostModal = ({isVisible, onBackDropPress}) => {
   }, [isVisible])
 
   const checkStoragePermission = () => {
-    check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((results) => {
-        switch (results) {
-            case RESULTS.UNAVAILABLE: 
-                break
-            case RESULTS.DENIED:
-                makeRequest().then(res => {
-                  console.log("XXXXXXXX",res);
-                    if (res === RESULTS.GRANTED){
-                        onPressAddPhoto()
-                    }
-                    else if (res === RESULTS.BLOCKED){
-                        openPhoneSettings()
-                    }
-                })
-                break
-            case RESULTS.GRANTED:
-                onPressAddPhoto()
-                break
-            case RESULTS.BLOCKED:
-                openPhoneSettings();
-                break;
-        }
-    }).catch((err) => {
-        showErrorToast(err)
-    })
-  }
-
-  const makeRequest = async () => {
-    const result = await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE)
+    onPressAddPhoto()
   }
 
   const onPressAddPhoto = async () => {
@@ -61,10 +32,6 @@ const AddPostModal = ({isVisible, onBackDropPress}) => {
     }
   }
 
-  const openPhoneSettings = () => {
-     openSettings()
-  }
-
   const onChangeText = (text) => {
         setCaption(text)
   }
@@ -72,11 +39,11 @@ const AddPostModal = ({isVisible, onBackDropPress}) => {
   const onPressUploadPost = () => {
     if (caption?.length>0 && postImage){
       const formData = new FormData()
-      console.log(formData);
+
       formData.append('image', {
         uri: postImage?.uri,
         name: postImage?.fileName,
-        type: postImage?.type, // Adjust the type based on your requirements
+        type: postImage?.type,
       });
       
       formData.append('caption', caption)
@@ -84,6 +51,7 @@ const AddPostModal = ({isVisible, onBackDropPress}) => {
 
       dispatch(createNewPost(formData)).then(({meta}) => {
         if(meta?.requestStatus === "fulfilled"){
+          dispatch(getAllPosts())
           onBackDropPress()
         }
        })

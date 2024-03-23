@@ -32,15 +32,15 @@ export const createNewPost = createAsyncThunk( 'posts/createPost', async (data, 
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json', // You can add other headers as needed
+        'Content-Type':  'multipart/form-data',
       },
     };
+
     try{
-        const response = await createPostApi(data ,config)
+        const response = await createPostApi(data, config)
         return response.data
     }
     catch(err){
-        console.log("NNNNNNNNN", err);
         throw err?.response?.data?.message
     }
 })

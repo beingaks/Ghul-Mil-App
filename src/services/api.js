@@ -13,7 +13,6 @@ export const getAllPostsApi = (config) => {
 }
 
 export const createPostApi = (data, headers) => {
-    console.log("lllllLLLL",data);
     return axios.post('http://10.0.2.2:5500/api/posts/create', data, headers)
 }
 
