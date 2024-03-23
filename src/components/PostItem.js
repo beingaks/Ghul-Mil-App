@@ -4,8 +4,27 @@ import Colors from '../assets/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from "react-native-vector-icons/AntDesign"
 import Icon2 from "react-native-vector-icons/FontAwesome"
+import { likeUnlikePosts, getAllPosts } from '../store/slices/PostsSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 const PostItem = ({item}) => {
+
+  const dispatch = useDispatch()
+
+  const {id} = useSelector(item => item.authSlice)
+
+  const onPressLikeButton = () => {
+
+      dispatch(likeUnlikePosts({postId: item?._id})).then(({meta}) => {
+        if(meta?.requestStatus === "fulfilled"){
+            dispatch(getAllPosts())
+        }
+       })
+  }
+
+  const isPostLiked = () => {
+    return item?.likes?.includes(id)
+  }
 
   return (
     <View style = {styles.postContainer} >
@@ -19,11 +38,13 @@ const PostItem = ({item}) => {
                 <Text style = {styles.captionText}>{item?.caption}</Text>
             </View>
             <View style = {styles.interactionCon}>
-                <TouchableOpacity style = {{marginRight: 10}}>
-                    <Icon name = "like1" size = {22}/>
+                <TouchableOpacity style = {{marginRight: 10}} onPress = {onPressLikeButton}>
+                    <Icon name = "like1" size = {22} style = {{color: isPostLiked() ? Colors?.Blue: Colors?.Grey}}/>
+                    <Text>{item?.likes?.length} Likes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style = {{marginRight: 10}}>
                     <Icon2 name ='comment' size = {22}/>
+                    <Text>0 Comments</Text>
                 </TouchableOpacity>
             </View>
        </View>

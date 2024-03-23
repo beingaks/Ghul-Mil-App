@@ -45,6 +45,27 @@ export const createNewPost = createAsyncThunk( 'posts/createPost', async (data, 
     }
 })
 
+export const likeUnlikePosts = createAsyncThunk( 'posts/likeUnlike', async (data, {getState}) => {
+
+    const currentState = getState();
+
+    const { token } = currentState.authSlice;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // You can add other headers as needed
+      },
+    };
+    try{
+        const response = await likeUnlikePostApi(data, config)
+        return response.data
+    }
+    catch(err){
+        throw err?.response?.data?.message
+    }
+})
+
 const initialState = {
     allPosts: []
 }
