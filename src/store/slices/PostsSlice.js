@@ -66,6 +66,27 @@ export const likeUnlikePosts = createAsyncThunk( 'posts/likeUnlike', async (data
     }
 })
 
+export const addComments = createAsyncThunk( 'posts/addComments', async (data, {getState}) => {
+
+    const currentState = getState();
+
+    const { token } = currentState.authSlice;
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json', // You can add other headers as needed
+      },
+    };
+    try{
+        const response = await addCommentApi(data, config)
+        return response.data
+    }
+    catch(err){
+        throw err?.response?.data?.message
+    }
+})
+
 const initialState = {
     allPosts: []
 }
