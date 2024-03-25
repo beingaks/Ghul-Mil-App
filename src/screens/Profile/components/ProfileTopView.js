@@ -1,21 +1,24 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import Colors from '../../../assets/Colors'
 import TypoGraphy from '../../../assets/TypoGraphy'
 import { launchImageLibrary } from "react-native-image-picker"
 import { addProfilePic, getUserInfo } from '../../../store/slices/AuthSlice'
+import EditProfileModal from './EditProfileModal'
 
 const ProfileTopView = () => {
 
     const dispatch = useDispatch()
+    const [showEditModal, setShowEditModal] = useState(false)
 
     const {
         email,
         profilePic,
         followers,
         following,
-        name
+        name,
+        bio,
         } = useSelector(state => state.authSlice)
 
         const onPressAddPhoto = async () => {
@@ -44,6 +47,10 @@ const ProfileTopView = () => {
             }
         }
 
+  const onBackDropPress = () => {
+    setShowEditModal(!showEditModal)
+  }
+
   return (
     <>
         <View style = {styles.profileInfoContainer}>
@@ -51,7 +58,6 @@ const ProfileTopView = () => {
                 <TouchableOpacity  onPress = {onPressAddPhoto}>
                     <Image source = {{uri: profilePic}} style = {styles.profileImage}/>
                 </TouchableOpacity>
-                <Text>{name? name : "Add a name"}</Text>
                 <Text style = {{fontWeight: TypoGraphy.fontWeight.FontWeight800, color: Colors.Black}}>{email}</Text>
             </View>
             <View style = {styles.profileDetailsContainer} >
@@ -69,11 +75,18 @@ const ProfileTopView = () => {
                 </TouchableOpacity>
             </View>
         </View>
-        <View style = {[styles.profileInfoContainer, {backgroundColor: Colors.HeaderColor}]}>
-            <TouchableOpacity style = {styles.editProfileButton}>
-                <Text style = {[styles.profileDetailItemText, {color: Colors.White}]}>Edit Profile</Text>
-            </TouchableOpacity>
+        <View style = {[styles.profileInfoContainer, {backgroundColor: Colors.HeaderColor, alignItems: 'flex-start'}]}>
+            <View style = {{justifyContent: 'center', alignItems: 'center'}}>
+                <TouchableOpacity style = {styles.editProfileButton} onPress = {onBackDropPress}>
+                    <Text style = {[styles.profileDetailItemText, {color: Colors.White}]}>Edit Profile</Text>
+                </TouchableOpacity>
+                <Text style = {{color: Colors.White, marginTop: 5}}>{name? name : "Add a name"}</Text>
+            </View>
+            <View style = {{ flex: 1}}>
+                <Text style = {{color: Colors.White, marginLeft: 15}}>{bio}</Text>
+            </View>
         </View>
+        <EditProfileModal onBackDropPress = {onBackDropPress} isVisible = {showEditModal} name = {name} bio = {bio}/>
     </>
   )
 }

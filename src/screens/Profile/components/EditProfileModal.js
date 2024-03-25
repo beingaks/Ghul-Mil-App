@@ -1,65 +1,76 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native'
-import Colors from '../assets/Colors'
-import ModalContainer from './ModalContainer'
+import Colors from '../../../assets/Colors'
+import ModalContainer from '../../../components/ModalContainer'
 import Icon from "react-native-vector-icons/MaterialIcons"
-import TypoGraphy from '../assets/TypoGraphy'
-import {  showInfoToast } from '../utils/helpers'
+import TypoGraphy from '../../../assets/TypoGraphy'
+import { showInfoToast } from '../../../utils/helpers'
 import { useDispatch } from 'react-redux'
-import { getAllPosts, addComments } from '../store/slices/PostsSlice'
+import { changeUserName, getUserInfo } from '../../../store/slices/AuthSlice'
 
-const AddCommentsModal = ({isVisible, onBackDropPress, postId}) => {
+const EditProfileModal = ({isVisible, onBackDropPress, name, bio}) => {
 
-  const [comment, setComment] = useState('')
+  const [newName, setNewName] = useState(name)
+  const [newBio, setNewBio] = useState(bio)
+
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    setComment('')
-  }, [isVisible])
-
-
-  const onChangeText = (text) => {
-        setComment(text)
+  const onChangeName = (text) => {
+    setNewName(text)
   }
 
+  const onChangeBio = (text) => {
+    setNewBio(text)
+}
+
   const onPressUploadComment = () => {
-    if (comment?.length>0 ){
-      dispatch(addComments({postId, comment})).then(({meta}) => {
+    dispatch(changeUserName({newName, newBio})).then(({meta}) => {
         if(meta?.requestStatus === "fulfilled"){
-          dispatch(getAllPosts())
-          onBackDropPress()
+            dispatch(getUserInfo())
+            onBackDropPress()
         }
-       })
-    }
-    else {
-      showInfoToast("Please provide comment")
-    }
+    })
+  }
+
+  const backPress = () => {
+    setNewBio(bio)
+    setNewName(name)
+    onBackDropPress()
   }
 
   return (
-    <ModalContainer isVisible={isVisible} onBackDropPress={onBackDropPress}>
+    <ModalContainer isVisible={isVisible} onBackDropPress={backPress}>
       <View style={styles.container}>
         <TextInput
           multiline
-          numberOfLines={4}
-          placeholder="Write your post comment"
+          numberOfLines={2}
+          placeholder="Write new name"
           style={styles.captionInput}
-          value={comment}
-          onChangeText = {onChangeText}
-          maxLength = {120}
+          value={newName}
+          onChangeText = {onChangeName}
+          maxLength = {20}
+        />
+         <TextInput
+          multiline
+          numberOfLines={2}
+          placeholder="Write new bio"
+          style={styles.captionInput}
+          value={newBio}
+          onChangeText = {onChangeBio}
+          maxLength = {60}
         />
         <TouchableOpacity
           style={styles.uploadButton}
           onPress = {onPressUploadComment} >
           <Icon name="upload" color={Colors.White} size={22} />
-          <Text style={styles.buttonStyle}>Upload Comment</Text>
+          <Text style={styles.buttonStyle}>Upload Bio</Text>
         </TouchableOpacity>
       </View>
     </ModalContainer>
   );
 }
 
-export default AddCommentsModal
+export default EditProfileModal
 
 const styles = StyleSheet.create({
     container: {

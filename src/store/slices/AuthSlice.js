@@ -9,7 +9,8 @@ const initialState = {
     profilePic: '',
     followers: [],
     following: [],
-    name: ''
+    name: '',
+    bio: ''
 }
 
 export const registerUser = createAsyncThunk( 'user/register', async (data) => {
@@ -73,7 +74,7 @@ export const getUserInfo = createAsyncThunk( 'user/getUserInfo', async (_,{getSt
     }
 })
 
-export const changeUserName = createAsyncThunk( 'user/changeUserName', async (data, {getState, dispatch}) => {
+export const changeUserName = createAsyncThunk( 'user/changeUserName', async (data, {getState}) => {
 
     const currentState = getState();
 
@@ -159,8 +160,9 @@ const AuthSlice = createSlice({
             state.profilePic = payload?.profilePic
             state.followers = payload?.followers
             state.following = payload?.following
+            state.bio = payload?.bio
         })
-        .addCase(populateUserInfo.rejected, (state, {payload}) => {
+        .addCase(populateUserInfo.rejected, (state, payload) => {
             showErrorToast(payload?.error?.message)
         })
 
@@ -174,7 +176,8 @@ const AuthSlice = createSlice({
             state.profilePic =""
             state.followers = ""
             state.following =""
-        }).addCase(removeUserInfo.rejected, (state, {payload}) => {
+            state.bio = ""
+        }).addCase(removeUserInfo.rejected, (state, payload) => {
             showErrorToast(payload?.error?.message)
         })
 
@@ -185,8 +188,9 @@ const AuthSlice = createSlice({
             state.profilePic = payload?.profilePic
             state.followers = payload?.followers
             state.following = payload?.following
+            state.bio = payload?.bio
             saveData("userData", state)
-        }).addCase(getUserInfo.rejected, (state, {payload}) => {
+        }).addCase(getUserInfo.rejected, (state, payload) => {
             showErrorToast(payload?.error?.message)
         })
 
@@ -195,17 +199,16 @@ const AuthSlice = createSlice({
         .addCase(addProfilePic.fulfilled, (state, {payload}) => {
             showSuccessToast(payload?.message)
         })
-        .addCase(addProfilePic.rejected, (state, {payload}) => {
+        .addCase(addProfilePic.rejected, (state, payload) => {
             showErrorToast(payload?.error?.message)
         })
 
         builder.addCase(changeUserName.pending, () => {
-            console.log(payload);
         })
         .addCase(changeUserName.fulfilled, (state, {payload}) => {
-            console.log("IIIIIIIII", payload);
+            showSuccessToast(payload?.message)
         })
-        .addCase(changeUserName.rejected, (state, {payload}) => {
+        .addCase(changeUserName.rejected, (state, payload) => {
             showErrorToast(payload?.error?.message)
         })
     }

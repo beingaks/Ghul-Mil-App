@@ -71,6 +71,7 @@ const AddPostModal = ({isVisible, onBackDropPress}) => {
           style={styles.captionInput}
           value={caption}
           onChangeText = {onChangeText}
+          maxLength = {120}
         />
         <TouchableOpacity
           style={styles.photoUpload}
