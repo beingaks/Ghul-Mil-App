@@ -23,3 +23,15 @@ export const likeUnlikePostApi = (data, headers) => {
 export const addCommentApi = (data, headers) => {
     return axios.post('http://10.0.2.2:5500/api/posts/comment', data, headers)
 }
+
+export const addProfilePicApi = (data, headers) => {
+    return axios.post('http://10.0.2.2:5500/api/user/upload-profile-pic', data, headers)
+}
+
+export const getUserInfoApi = ( headers ) => {
+    return axios.get('http://10.0.2.2:5500/api/user/userInfo', headers)
+}
+
+export const changeUserNameApi = (data, headers  ) => {
+    return axios.post('http://10.0.2.2:5500/api/user/change-user-name', data, headers)
+}

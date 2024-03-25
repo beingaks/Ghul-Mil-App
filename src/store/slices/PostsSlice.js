@@ -116,7 +116,6 @@ const postSlice = createSlice({
             showSuccessToast("Post created successfully")
         }).
         addCase(createNewPost.rejected, (state, payload) => {
-            console.log(JSON.stringify(payload));
             showErrorToast(payload?.error?.message)
         })
     }

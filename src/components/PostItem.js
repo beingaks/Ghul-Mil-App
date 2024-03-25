@@ -8,18 +8,20 @@ import { likeUnlikePosts, getAllPosts } from '../store/slices/PostsSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import AddCommentsModal from './AddCommentsModal'
 import CommentsModal from './CommentsModal'
+import LikeListModal from './LikeListModal'
 
 const PostItem = ({item}) => {
 
   const [showCommentModal, setShowCommentModal] = useState(false)
   const [showPostCommentModal, setShowPostCommentModal] = useState(false)
+  const [showPostLikesModal, setShowPostLikesModal] = useState(false)
+
 
   const dispatch = useDispatch()
 
   const {id} = useSelector(item => item.authSlice)
 
   const onPressLikeButton = () => {
-
       dispatch(likeUnlikePosts({postId: item?._id})).then(({meta}) => {
         if(meta?.requestStatus === "fulfilled"){
             dispatch(getAllPosts())
@@ -28,7 +30,7 @@ const PostItem = ({item}) => {
   }
 
   const isPostLiked = () => {
-    return item?.likes?.includes(id)
+    return item?.likes?.some(item => item?._id === id);
   }
 
   const toggleBackAddCommentDropPress = () => {
@@ -37,6 +39,10 @@ const PostItem = ({item}) => {
 
   const toggleBackShowCommentDropPress = () => {
     setShowPostCommentModal(!showPostCommentModal)
+  }
+
+  const toggleBackShowLikesDropPress = () => {
+    setShowPostLikesModal(!showPostLikesModal)
   }
 
   return (
@@ -56,7 +62,7 @@ const PostItem = ({item}) => {
                         <TouchableOpacity style = {{marginRight: 10}} onPress = {onPressLikeButton}>
                             <Icon name = "like1" size = {22} style = {{color: isPostLiked() ? Colors?.Blue: Colors?.Grey}}/>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress = {toggleBackShowLikesDropPress}>
                             <Text>{item?.likes?.length} Likes</Text>
                         </TouchableOpacity>
                     </View>
@@ -73,6 +79,7 @@ const PostItem = ({item}) => {
         </View>
         <AddCommentsModal isVisible = {showCommentModal} onBackDropPress = {toggleBackAddCommentDropPress} postId = {item?._id}/>
         <CommentsModal isVisible = {showPostCommentModal} comments = {item?.comments} onBackDropPress = {toggleBackShowCommentDropPress}/>
+        <LikeListModal  isVisible = {showPostLikesModal} likes = {item?.likes} onBackDropPress = {toggleBackShowLikesDropPress}/>
     </>
   )
 }

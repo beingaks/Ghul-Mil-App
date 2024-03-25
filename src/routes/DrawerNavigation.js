@@ -6,6 +6,8 @@ import { TouchableOpacity, Text, StyleSheet } from 'react-native'
 import Colors from '../assets/Colors'
 import { useDispatch, UseDispatch } from 'react-redux'
 import { removeUserInfo } from '../store/slices/AuthSlice'
+import ProfileScreen from '../screens/Profile/ProfileScreen'
+import CommonHeader from '../components/CommonHeader'
 
 const DrawerNavigation = ({navigation}) => {
     
@@ -26,7 +28,7 @@ const DrawerNavigation = ({navigation}) => {
           <TouchableOpacity style = {styles.drawerButton} onPress={() => props?.navigation?.navigate('Home')}>
             <Text style = {styles.drawerButtonText}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity  style = {styles.drawerButton}>
+          <TouchableOpacity  style = {styles.drawerButton} onPress = {() => props?.navigation?.navigate('Profile')}>
             <Text style = {styles.drawerButtonText}>Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity  style = {styles.drawerButton} onPress={() => logout(props.navigation.navigate)}>
@@ -45,6 +47,13 @@ const DrawerNavigation = ({navigation}) => {
           <Drawer.Screen
             name="Home"
             component={Home}
+          />
+          <Drawer.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              header: (props) => <CommonHeader {...props} options = {{title: "Profile"}}/>,
+            }}
           />
       </Drawer.Navigator>
     );
