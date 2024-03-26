@@ -65,7 +65,8 @@ export default Signup
 const styles = StyleSheet.create({
     mainContainer: {
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: Colors.HeaderColor
     },
     headerText: {
         marginTop: 10,
